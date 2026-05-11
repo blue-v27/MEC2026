@@ -18,4 +18,22 @@ class FoodService {
       throw Exception('Failed to load foods');
     }
   }
+
+  static Future<dynamic> searchByBarcode(String barcode) async {
+    final url =
+        "https://world.openfoodfacts.org/api/v0/product/$barcode.json";
+
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+
+      if (data['status'] == 1) {
+        return data['product'];
+      }
+    }
+
+    return null;
+  }
 }
+

@@ -21,9 +21,10 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 1;
+  double calorieGoal = 3000;
 
   // Shared food list
-  final List<Map<String, String>> items = [
+  final List<Map<String, dynamic>> items = [
     {"name": "Pizza", "cal": "500", "qty": "2"},
     {"name": "Burger", "cal": "700", "qty": "1"},
   ];
@@ -35,7 +36,7 @@ class _MainScreenState extends State<MainScreen> {
         child: Text("Profile"),
       ),
 
-      HomeScreen(items: items),
+      HomeScreen(items: items, calorieGoal: calorieGoal,),
 
       LogScreen(items: items),
 

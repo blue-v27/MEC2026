@@ -1,19 +1,43 @@
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
-  final List<Map<String, String>> items;
+  final List<Map<String, dynamic>> items;
+  final double calorieGoal;
 
   const HomeScreen({
     super.key,
     required this.items,
+    required this.calorieGoal,
   });
 
-  int get totalCalories {
+  double get totalCalories {
     return items.fold(
       0,
-      (sum, item) =>
-          sum + (int.tryParse(item["cal"] ?? "0") ?? 0),
+      (sum, item) => sum + double.parse(item['cal'].toString()),
     );
+  }
+
+  double get percent {
+    if (calorieGoal == 0) return 0;
+    return (totalCalories / calorieGoal) * 100;
+  }
+
+  String get statusMessage {
+    if (percent < 10) {
+      return "Famished";
+    } else if (percent < 25) {
+      return "Hungry";
+    } else if (percent < 40) {
+      return "Feeling it";
+    } else if (percent < 60) {
+      return "Energized";
+    } else if (percent < 85) {
+      return "Perfect";
+    } else if (percent <= 105) {
+      return "Full";
+    } else {
+      return "Lethargic";
+    }
   }
 
   @override
@@ -23,27 +47,44 @@ class HomeScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text(
-            "Calories",
+            'Calories',
             style: TextStyle(fontSize: 20),
           ),
 
           const SizedBox(height: 10),
 
           Text(
-            totalCalories.toString(),
+            totalCalories.toStringAsFixed(0),
             style: const TextStyle(
-              fontSize: 40,
+              fontSize: 42,
               fontWeight: FontWeight.bold,
             ),
           ),
 
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
 
-          const Text(
-            "Hungry",
-            style: TextStyle(
+          Text(
+            '${percent.toStringAsFixed(0)}% of goal',
+            style: const TextStyle(
               fontSize: 18,
               color: Colors.grey,
+            ),
+          ),
+
+          const SizedBox(height: 40),
+
+          const Text(
+            '🐯',
+            style: TextStyle(fontSize: 120),
+          ),
+
+          const SizedBox(height: 20),
+
+          Text(
+            statusMessage,
+            style: const TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],

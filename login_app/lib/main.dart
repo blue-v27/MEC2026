@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'log_screen.dart';
 import 'friends_screen.dart';
+import 'package:pedometer/pedometer.dart';
 
 void main() {
   runApp(
@@ -21,24 +22,45 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 1;
-  double calorieGoal = 3000;
 
-  // Shared food list
+  double calorieGoal = 3000;
+  int steps = 0;
+
+  Stream<StepCount>? _stepStream;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _stepStream = Pedometer.stepCountStream;
+
+    _stepStream!.listen((event) {
+      setState(() {
+        steps = event.steps;
+      });
+    });
+  }
+
   final List<Map<String, dynamic>> items = [
-    {"name": "Pizza", "cal": "500", "qty": "2"},
-    {"name": "Burger", "cal": "700", "qty": "1"},
+    {"name": "Pizza", "cal": 500, "qty": 2},
+    {"name": "Burger", "cal": 700, "qty": 1},
   ];
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> screens = [
-      const Center(
-        child: Text("Profile"),
+    final screens = [
+      const Center(child: Text("Profile")),
+
+      HomeScreen(
+        items: items,
+        calorieGoal: calorieGoal,
+        steps: steps,
       ),
 
-      HomeScreen(items: items, calorieGoal: calorieGoal,),
-
-      LogScreen(items: items),
+      LogScreen(
+        items: items,
+        steps: steps,
+      ),
 
       FriendsScreen(),
     ];
@@ -48,18 +70,12 @@ class _MainScreenState extends State<MainScreen> {
         title: const Text("09:52 AM"),
         centerTitle: true,
       ),
-
       body: screens[_currentIndex],
-
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-
         onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
+          setState(() => _currentIndex = index);
         },
-
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

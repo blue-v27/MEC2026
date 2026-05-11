@@ -4,10 +4,15 @@ class HomeScreen extends StatelessWidget {
   final List<Map<String, dynamic>> items;
   final double calorieGoal;
 
+  final int steps;
+  final double caloriesPerStep;
+
   const HomeScreen({
     super.key,
     required this.items,
     required this.calorieGoal,
+    required this.steps,
+    this.caloriesPerStep = 0.04,
   });
 
   double get totalCalories {
@@ -17,9 +22,13 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+  double get burnedCalories => steps * caloriesPerStep;
+
+  double get netCalories => totalCalories - burnedCalories;
+
   double get percent {
     if (calorieGoal == 0) return 0;
-    return (totalCalories / calorieGoal) * 100;
+    return (netCalories / calorieGoal) * 100;
   }
 
   String get statusMessage {
@@ -68,6 +77,25 @@ class HomeScreen extends StatelessWidget {
             style: const TextStyle(
               fontSize: 18,
               color: Colors.grey,
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          // STEPS SECTION
+          Text(
+            "Steps: $steps",
+            style: const TextStyle(fontSize: 18),
+          ),
+
+          Text(
+            "Burned: ${burnedCalories.toStringAsFixed(0)} kcal",
+          ),
+
+          Text(
+            "Net: ${netCalories.toStringAsFixed(0)} kcal",
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
             ),
           ),
 

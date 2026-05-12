@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class FoodService {
-  static const String apiKey = 'YOUR_API_KEY_HERE';
+  static const String apiKey = '18ZMl1KKgqd5pKbXhohy4SCs3Ri0FJb2PPo6pgbv';
 
   static Future<List<dynamic>> searchFood(String query) async {
     final url = Uri.parse(
